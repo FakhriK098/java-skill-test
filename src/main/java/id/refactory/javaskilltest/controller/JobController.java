@@ -33,10 +33,19 @@ public class JobController {
     ) {
         String tokenUser = tokenHeader.replace("Bearer ","");
 
-        if (tokenHeader == null ||
-                !tokenHeader.startsWith("Bearer ") ||
-                tokenUtils.isExpiredToken(tokenUser)
-        ) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Boolean isExpiredToken = tokenUtils.isExpiredToken(tokenUser);
+
+            if (isExpiredToken) {
+                return new ResponseEntity<>("Expired Token", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 
@@ -56,10 +65,19 @@ public class JobController {
     ) {
         String tokenUser = tokenHeader.replace("Bearer ","");
 
-        if (tokenHeader == null ||
-                !tokenHeader.startsWith("Bearer ") ||
-                tokenUtils.isExpiredToken(tokenUser)
-        ) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+            return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            Boolean isExpiredToken = tokenUtils.isExpiredToken(tokenUser);
+
+            if (isExpiredToken) {
+                return new ResponseEntity<>("Expired Token", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 
