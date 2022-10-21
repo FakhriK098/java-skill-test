@@ -1,6 +1,7 @@
 package id.refactory.javaskilltest.controller;
 
-import id.refactory.javaskilltest.util.JwtUtils;
+import id.refactory.javaskilltest.util.TokenUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
-
-import static id.refactory.javaskilltest.helper.Constant.dansBaseUrl;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
@@ -19,17 +18,25 @@ public class JobController {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final JwtUtils jwtUtils;
+    private final TokenUtils tokenUtils;
 
-    public JobController(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
+    @Value("${dans.baseUrl}")
+    private String dansBaseUrl;
+
+    public JobController(TokenUtils tokenUtils) {
+        this.tokenUtils = tokenUtils;
     }
 
     @GetMapping(value = "/job", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<?> getJobList(
             @RequestHeader("Authorization") String tokenHeader
     ) {
-        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+        String tokenUser = tokenHeader.replace("Bearer ","");
+
+        if (tokenHeader == null ||
+                !tokenHeader.startsWith("Bearer ") ||
+                tokenUtils.isExpiredToken(tokenUser)
+        ) {
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 
@@ -47,8 +54,12 @@ public class JobController {
             @PathVariable String id,
             @RequestHeader("Authorization") String tokenHeader
     ) {
+        String tokenUser = tokenHeader.replace("Bearer ","");
 
-        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+        if (tokenHeader == null ||
+                !tokenHeader.startsWith("Bearer ") ||
+                tokenUtils.isExpiredToken(tokenUser)
+        ) {
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tbl_user")
-public class UserEntity {
+public class UserData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,10 +18,10 @@ public class UserEntity {
     @Column(name = "created_at")
     private Long createdAt;
 
-    public UserEntity() {
+    public UserData() {
 
     }
-    public UserEntity(Long id, String username, String password, Long createdAt) {
+    public UserData(Long id, String username, String password, Long createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;

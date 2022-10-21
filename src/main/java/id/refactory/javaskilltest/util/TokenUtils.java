@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtUtils {
+public class TokenUtils {
     private static final long serialVersionUID = -1122334455667788L;
 
     private static final long jwtExpired = 5 * 60 * 60 * 1000;
@@ -31,7 +31,7 @@ public class JwtUtils {
         return getToken(token, Claims::getExpiration);
     }
 
-    private @NonNull Boolean isExpiredToken(String token) {
+    public @NonNull Boolean isExpiredToken(String token) {
         final Date expired = getExpiredDateToken(token);
         return expired.before(new Date());
     }

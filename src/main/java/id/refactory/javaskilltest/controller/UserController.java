@@ -1,8 +1,8 @@
 package id.refactory.javaskilltest.controller;
 
-import id.refactory.javaskilltest.entity.UserEntity;
+import id.refactory.javaskilltest.entity.UserData;
 import id.refactory.javaskilltest.repository.UserRepository;
-import id.refactory.javaskilltest.util.JwtUtils;
+import id.refactory.javaskilltest.util.TokenUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -24,20 +24,20 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    private final JwtUtils jwtUtils;
+    private final TokenUtils tokenUtils;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserRepository userRepository, JwtUtils jwtUtils, PasswordEncoder passwordEncoder) {
+    public UserController(UserRepository userRepository, TokenUtils tokenUtils, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.jwtUtils = jwtUtils;
+        this.tokenUtils = tokenUtils;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     ResponseEntity<?> login(@RequestBody UserRequest userRequest) {
 
-        if (userRequest == null){
+        if (userRequest == null) {
             String message = "Username and Password can't empty";
 
             HashMap<String, Object> badResponse = new HashMap<>();
@@ -45,11 +45,11 @@ public class UserController {
             return new ResponseEntity<>(badResponse, HttpStatus.BAD_REQUEST);
         }
 
-        UserEntity userEntity = userRepository.getUserByUsername(userRequest.getUsername());
+        UserData userData = userRepository.getUserByUsername(userRequest.getUsername());
 
-        Boolean isPasswordMatch = passwordEncoder.matches(userRequest.getPassword(), userEntity.getPassword());
+        Boolean isPasswordMatch = passwordEncoder.matches(userRequest.getPassword(), userData.getPassword());
 
-        if (userEntity == null || !isPasswordMatch) {
+        if (userData == null || !isPasswordMatch) {
             String message = "Username and Password not found";
 
             HashMap<String, Object> badResponse = new HashMap<>();
@@ -68,8 +68,16 @@ public class UserController {
 
     @PostMapping(value = "/register", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     ResponseEntity<?> register(@RequestBody UserRequest userRequest) {
+        if (userRequest == null) {
+            String message = "Username and Password can't empty";
+
+            HashMap<String, Object> badResponse = new HashMap<>();
+            badResponse.put("message", message);
+            return new ResponseEntity<>(badResponse, HttpStatus.BAD_REQUEST);
+        }
+
         String passwordEncode = passwordEncoder.encode(userRequest.getPassword());
-        UserEntity userEntity = new UserEntity(
+        UserData userData = new UserData(
                 0L,
                 userRequest.getUsername(),
                 passwordEncode,
@@ -77,11 +85,11 @@ public class UserController {
         );
 
         try {
-            userRepository.save(userEntity);
+            userRepository.save(userData);
 
             return getTokenResponse(userRequest.getUsername(), userRequest.getPassword());
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
 
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -90,7 +98,7 @@ public class UserController {
     private @NonNull ResponseEntity<?> getTokenResponse(String username, String password) {
         User user = new User(username, password, new ArrayList<>());
 
-        String token = jwtUtils.generateToken(user);
+        String token = tokenUtils.generateToken(user);
 
         HashMap<String, Object> response = new HashMap<>();
         response.put("token", token);
