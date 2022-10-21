@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "35a6b658-dcbc-4a19-867b-065e62c19e21",
-    "name": "Dans Skill Test",
+    "name": "Java Developer Test",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "8748653"
   },
@@ -26,7 +26,7 @@
             "{{BASE_URL}}"
           ],
           "path": [
-            "auth",
+            "user",
             "register"
           ]
         }
@@ -53,7 +53,7 @@
             "{{BASE_URL}}"
           ],
           "path": [
-            "auth",
+            "user",
             "login"
           ]
         }
@@ -134,7 +134,7 @@
     },
     {
       "key": "TOKEN",
-      "value": "dkasndfiw3ojr823ifnknewjcnwufh8932ifnwjenc98w3h92oj3mfio23c892ni3icn23",
+      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmR1cnJvaG1hbiIsImlhdCI6MTY2NTY1MDM5MSwiZXhwIjoxNjY1Njg2MzkxfQ.8kAdf1zjXZNcWSfV3XoXF71QOJwt3uYAu1HkE3o-S_KzZwMpO3OxesoaaqRT1nKuFAkInLa7xlDY1TvFy1zP8g",
       "type": "string"
     }
   ]

@@ -29,7 +29,7 @@ public class JobController {
     ResponseEntity<?> getJobList(
             @RequestHeader("Authorization") String tokenHeader
     ) {
-        if (tokenHeader == null && !tokenHeader.startsWith("Bearer ")) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 
@@ -48,12 +48,12 @@ public class JobController {
             @RequestHeader("Authorization") String tokenHeader
     ) {
 
-        if (tokenHeader == null && !tokenHeader.startsWith("Bearer ")) {
+        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
             return new ResponseEntity<>("Invalid Token", HttpStatus.UNAUTHORIZED);
         }
 
         try {
-            String url = dansBaseUrl + "/recruitment/positions.json/" + id;
+            String url = dansBaseUrl + "/recruitment/positions/" + id;
 
             return new ResponseEntity<>(restTemplate.getForObject(url, String.class), HttpStatus.OK);
         } catch (Exception e) {
