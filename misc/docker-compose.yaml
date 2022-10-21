@@ -1,0 +1,13 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=fakhri
+      - POSTGRES_PASSWORD=1234567890
+      - POSTGRES_DB=dans_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
